@@ -13,9 +13,7 @@ namespace ChoiceBot.ChoiceBotMain
         private readonly Random _rand = new Random();
 
         private const string HelpText = 
-              "- 선택: 공백이나 vs로 구분해서 보내주세요\r\n"
-            + "- 주사위: (주사위 개수)d(주사위 숫자) 를 보내주세요 (예: d5 2d10 등)\r\n"
-            + "- 예아니오: 끝에 예아니오를 넣어서 보내주세요\r\n"
+            "- 주사위: (주사위 개수)d(주사위 숫자) 를 보내주세요 (예: d5 2d10 등)\r\n"
             + "- 도움말: 이 내용을 보내드려요";
 
         public ChoiceBot(IApiClient client) : base(client)
@@ -27,9 +25,7 @@ namespace ChoiceBot.ChoiceBotMain
             var list = new List<StatusProcessor>()
             {
                 PipeHelp,
-                PipeYesNo,
                 PipeDice,
-                PipeChoice,
                 PipeNotHandledHelp
             };
             
@@ -38,7 +34,7 @@ namespace ChoiceBot.ChoiceBotMain
 
         private async Task PipeHelp(INote status, Func<Task> next)
         {
-            if (!status.Content.Contains("도움말"))
+            if (!status.Content.Contains("도움말") && !status.Content.Contains("사용법") && !status.Content.Contains("도와줘"))
             {
                 await next();
                 return;
@@ -134,12 +130,12 @@ namespace ChoiceBot.ChoiceBotMain
                     {
                         throw new ArgumentException("diceNum is less than or equal to 1");
                     }
+		    int[] diceList = Enumerable.Repeat(0, diceCount).Select(_ => _rand.Next(1, diceNum + 1)).ToArray();
+                    int diceSum = diceList.Sum();
 
-                    string diceRollStr = string.Join(", ", Enumerable
-                        .Repeat(0, diceCount)
-                        .Select(_ => _rand.Next(1, diceNum + 1)).ToArray());
+                    string diceRollStr = string.Join(" + ", diceList);
 
-                    return $"{diceRollStr} ({diceNum}면체)";
+                    return $"{diceRollStr} = {diceSum} ({diceNum}면체)";
                 }).ToArray();
 
                 string diceReplyStr = string.Join("\r\n", diceResults);
@@ -152,7 +148,8 @@ namespace ChoiceBot.ChoiceBotMain
             }
             catch (Exception ex)
             {
-                await ReplyTo(status, diceErrorMsg + "\r\n\r\n" + $"에러 메시지: {ex.Message}");
+                //await ReplyTo(status, diceErrorMsg + "\r\n\r\n" + $"에러 메시지: {ex.Message}");
+                await ReplyTo(status, "잘못된 사용법입니다. 이렇게 해보세요:\r\n\r\n" + HelpText);
                 return;
             }
         }

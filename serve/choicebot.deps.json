@@ -1,0 +1,60 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "choicebot/0.1.0": {
+        "dependencies": {
+          "Mastonet": "1.4.0",
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "choicebot.dll": {}
+        }
+      },
+      "Mastonet/1.4.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Mastonet.dll": {
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.0"
+          }
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.2.21924"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "choicebot/0.1.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Mastonet/1.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Pz5Jm0zpocXb037kBN6JjYAQuSr1rWUQciM9wUzU72RR8diR+U8fhQ0soYOU1bGoHRWX2MR6+0YmPz6a+lwuzQ==",
+      "path": "mastonet/1.4.0",
+      "hashPath": "mastonet.1.4.0.nupkg.sha512"
+    },
+    "Newtonsoft.Json/11.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
+      "path": "newtonsoft.json/11.0.2",
+      "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
+    }
+  }
+}
