@@ -120,7 +120,7 @@ namespace ChoiceBot.ChoiceBotMain
                     string diceCountStr = match.Groups[1].Value;
                     diceCountStr = string.IsNullOrWhiteSpace(diceCountStr) ? "1" : diceCountStr;
                     string[] diceNumArray = match.Groups[2].Value.Split("+");
-		    string diceNumStr = "0";
+                    string diceNumStr = "0";
                     string diceAppendStr = "0";
                     if(diceNumArray.Length > 1)
                     {
@@ -139,7 +139,7 @@ namespace ChoiceBot.ChoiceBotMain
                     {
                         throw new ArgumentException("diceNum is less than or equal to 1");
                     }
-		    int[] diceList = Enumerable.Repeat(0, diceCount).Select(_ => _rand.Next(1, diceNum + 1) + diceAppend).ToArray();
+                    int[] diceList = Enumerable.Repeat(0, diceCount).Select(_ => _rand.Next(1, diceNum + 1) + diceAppend).ToArray();
                     int diceSum = diceList.Sum();
 
                     string diceRollStr = string.Join(" + ", diceList);
