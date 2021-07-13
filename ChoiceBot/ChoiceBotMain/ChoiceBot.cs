@@ -13,7 +13,7 @@ namespace ChoiceBot.ChoiceBotMain
         private readonly Random _rand = new Random();
 
         private const string HelpText = 
-            "- 주사위: (주사위 개수)d(주사위 숫자) 를 보내주세요 (예: d5 2d10 등)\r\n"
+            "- 주사위: (주사위 개수)d(주사위 숫자)+(보정 숫자) 를 보내주세요 (예: d5 2d10 3d6+10 등)\r\n"
             + "- 도움말: 이 내용을 보내드려요";
 
         public ChoiceBot(IApiClient client) : base(client)
@@ -102,7 +102,7 @@ namespace ChoiceBot.ChoiceBotMain
             string diceExpression = status.Content.Trim();
             string[] diceExprList = diceExpression.Split(new[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var matchQuery = diceExprList.Select(expr => Regex.Match(expr, "([0-9]*?)[dD]([0-9]+)"));
+            var matchQuery = diceExprList.Select(expr => Regex.Match(expr, @"([0-9]*?)[dD]([0-9\+]+)"));
             var matchList = matchQuery as Match[] ?? matchQuery.ToArray();
             
             if (matchList.Any(match => !match.Success) || matchList.Length == 0)
@@ -119,18 +119,27 @@ namespace ChoiceBot.ChoiceBotMain
                 {
                     string diceCountStr = match.Groups[1].Value;
                     diceCountStr = string.IsNullOrWhiteSpace(diceCountStr) ? "1" : diceCountStr;
-                    string diceNumStr = match.Groups[2].Value;
+                    string[] diceNumArray = match.Groups[2].Value.Split("+");
+		    string diceNumStr = "0";
+                    string diceAppendStr = "0";
+                    if(diceNumArray.Length > 1)
+                    {
+                        diceAppendStr = diceNumArray[1];
+                    }
+                    diceNumStr = diceNumArray[0];
 
                     int diceCount;
                     int diceNum;
+                    int diceAppend;
 
                     diceCount = int.Parse(diceCountStr);
                     diceNum = int.Parse(diceNumStr);
+                    diceAppend = int.Parse(diceAppendStr);
                     if (diceNum <= 1)
                     {
                         throw new ArgumentException("diceNum is less than or equal to 1");
                     }
-		    int[] diceList = Enumerable.Repeat(0, diceCount).Select(_ => _rand.Next(1, diceNum + 1)).ToArray();
+		    int[] diceList = Enumerable.Repeat(0, diceCount).Select(_ => _rand.Next(1, diceNum + 1) + diceAppend).ToArray();
                     int diceSum = diceList.Sum();
 
                     string diceRollStr = string.Join(" + ", diceList);
